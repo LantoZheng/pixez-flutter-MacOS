@@ -28,7 +28,7 @@ jobs:
       
       # Step 6: Build Mac app
       - name: Build Mac app (release)
-        run: flutter build macos --release --no-codesign
+        run: flutter build macos --profile
 
       # Step 7: Create Payload directory and move Runner.app
       - name: Prepare Payload directory
