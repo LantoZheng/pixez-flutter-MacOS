@@ -1,0 +1,50 @@
+name: Build IOS
+on:
+  workflow_dispatch: {}
+jobs:
+  Build_IOS:
+    runs-on: macos-latest
+    steps:
+      # Step 1: Checkout code
+      - uses: actions/checkout@v3
+      
+      # Step 2: Setup Flutter environment
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      
+      # Step 3: Confirm Flutter version
+      - name: Check Flutter Version
+        run: flutter --version
+      
+      # Step 4: Get dependencies
+      - name: Get Flutter dependencies
+        run: flutter pub get
+
+      # Step 5: Build generated code
+      - name: Run build_runner
+        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      
+      # Step 6: Build iOS app
+      - name: Build iOS app (release)
+        run: flutter build ios --release --no-codesign
+
+      # Step 7: Create Payload directory and move Runner.app
+      - name: Prepare Payload directory
+        run: |
+          mkdir -p build/ios/iphoneos/Payload
+          mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload
+
+      # Step 8: Package .ipa file
+      - name: Package .ipa
+        run: |
+          cd build/ios/iphoneos/
+          zip -r pixez-ios.ipa Payload
+
+      # Step 9: Upload artifact
+      - name: Upload pixez-ios.ipa
+        uses: actions/upload-artifact@v3
+        with:
+          name: pixez-ios.ipa
+          path: build/ios/iphoneos/pixez-ios.ipa
