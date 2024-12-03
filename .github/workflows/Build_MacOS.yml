@@ -33,18 +33,10 @@ jobs:
       # Step 7: Create Payload directory and move Runner.app
       - name: Prepare Payload directory
         run: |
-          mkdir -p build/MacOS/Payload
+          mkdir -p build/MacOS/Payload build/macos/Build/Products/Release/pica_comic.app
           mv build/MacOS/Runner.app build/MacOS/Payload
 
-      # Step 8: Package .app file
-      - name: Package .app
-        run: |
-          cd build/MacOS/
-          zip -r pixez-MacOS.dmg Payload
-
-      # Step 9: Upload artifact
-      - name: Upload pixez-ios.ipa
-        uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          name: pixez-ios.ipa
-          path: build/ios/iphoneos/pixez-ios.ipa
+          name: macos-build.zip
+          path: build/macos/Build/Products/Release/pica_comic.app
