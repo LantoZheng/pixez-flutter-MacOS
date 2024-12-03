@@ -1,4 +1,4 @@
-name: Build IOS
+name: Build MacOS
 on:
   workflow_dispatch: {}
 jobs:
